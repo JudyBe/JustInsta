@@ -39,6 +39,11 @@ class CurlService {
    */
   protected function setup()
   {
+    // Delete cookie file if exists
+    if (file_exists($this->curl->cookie_file))
+      unlink($this->curl->cookie_file);
+
+
     $ua = new UserAgent;
 
     // Set up User-Agent
@@ -51,8 +56,8 @@ class CurlService {
     $this->curl->referer = $this->url;
 
     // SSL
-    $this->curl->options['CURLOPT_SSL_VERIFYPEER'] = 0;
-    $this->curl->options['CURLOPT_SSL_VERIFYHOST'] = 0;
+    $this->addHeader('CURLOPT_SSL_VERIFYPEER', 0);
+    $this->addHeader('CURLOPT_SSL_VERIFYHOST', 0);
   }
 
   /**
@@ -70,7 +75,7 @@ class CurlService {
     $csrf = $this->getCSRFToken();
 
     if ( ! $csrf)
-      throw new TokenNotFoundException("CSRF token not found");
+      throw new TokenNotFoundException();
 
     // Add Cookie with "csrftoken"
     $this->addHeader('cookie', "csrftoken={$csrf}");
@@ -86,10 +91,10 @@ class CurlService {
     $json = json_decode($body);
 
     if (json_last_error() !== JSON_ERROR_NONE)
-      throw new WrongResponseException("Wrong response from server");
+      throw new WrongResponseException();
     
     if ( ! $json->authenticated)
-      throw new WrongUsernameOrPasswordException("Wrong Username or Password");
+      throw new WrongUsernameOrPasswordException();
 
     return true;
       
