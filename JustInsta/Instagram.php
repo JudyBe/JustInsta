@@ -12,7 +12,7 @@ class Instagram {
    */
   protected $error;
 
-  protected $base_url = "https://instagram.com/accounts/login/ajax/";
+  protected $ajax_login_url = "https://instagram.com/accounts/login/ajax/";
 
   public function __construct(CurlService $curl = null)
   {
@@ -20,9 +20,6 @@ class Instagram {
       die('Curl class is broken :(' . PHP_EOL);
 
     $this->curl = $curl;
-
-    // Setup
-    $this->curl->setUrl($this->base_url);
     
   }
 
@@ -36,6 +33,9 @@ class Instagram {
   {
     try
     {
+      // Setup
+      $this->curl->setUrl($this->ajax_login_url);
+
       return $this->curl->makeLoginRequest($login, $password);
     }
     catch (\Exception $e)
