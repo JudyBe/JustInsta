@@ -1,0 +1,10 @@
+{
+    "require": {
+        "shuber/curl": "dev-master"
+    },
+    "autoload": {
+      "psr-0": {
+        "JustInsta": "."
+      }
+    }
+}
